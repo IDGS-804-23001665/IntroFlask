@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+
+{% block content %}
+<div class="container">
+    <h2>Calcular Distancia entre 2 Puntos</h2>
+    <form method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Punto 1</h4>
+                {{ macros.distancia('x1', 'Coordenada X1') }}
+                {{ macros.distancia('y1', 'Coordenada Y1') }}
+            </div>
+            <div class="col-md-6">
+                <h4>Punto 2</h4>
+                {{ macros.distancia('x2', 'Coordenada X2') }}
+                {{ macros.distancia('y2', 'Coordenada Y2') }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Calcular Distancia</button>
+    </form>
+    
+        <div class="mt-4 alert alert-info">
+            <h4>Resultado: {{ resultado }}</h4>
+        </div>
+</div>
+{% endblock %}
