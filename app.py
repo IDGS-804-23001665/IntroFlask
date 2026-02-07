@@ -112,6 +112,43 @@ def alumnos():
         correo = alumno_clas.correo.data
     return render_template("alumnos.html", form = alumno_clas, mat = mat, nom = nom, ape = ape, correo = correo)
 
+@app.route('/cinepolis', methods=['GET', 'POST'])
+def cinepolis():
+    form = forms.CinepolisForm(request.form)
+    total_pagar = 0.0
+    mensaje = ""
+    
+    if request.method == 'POST' and form.validate():
+        try:
+            nombre = form.nombre.data
+            compradores = int(form.cant_compradores.data)
+            boletas = int(form.cant_boletas.data)
+            tarjeta = form.tarjeta.data
+            
+            limite_boletas = 7 * compradores
+            
+            if boletas > limite_boletas:
+                mensaje = f"Maximo 7 boletas por persona (Limite: {limite_boletas})"
+            else:
+                precio_boleta = 12
+                total = boletas * precio_boleta
+                descuento_cant = 0
+                if boletas > 5:
+                    descuento_cant = 0.15
+                elif boletas >= 3:
+                    descuento_cant = 0.10
+                
+                total = total - (total * descuento_cant)
+                
+                if tarjeta == 'si':
+                    total = total - (total * 0.10)
+                
+                total_pagar = total
+        except ValueError:
+            mensaje = "Error en los datos ingresados"
+
+    return render_template('cinepolis.html', form=form, total_pagar=total_pagar, mensaje=mensaje)
+
 if __name__ == '__main__':
     csrf.init_app(app)
     app.run(debug=True)

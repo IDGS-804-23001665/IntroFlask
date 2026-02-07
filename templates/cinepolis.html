@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% import "_macros.html" as macro %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cinepolis.css') }}">
+
+<div class="cine-container">
+    <div class="cine-header">
+        <h1>Cinépolis</h1>
+        <p>LA CAPITAL DEL CINE</p>
+    </div>
+
+    <form action="" method="post" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cine-section">
+                    <h3>Entradas</h3>
+                    {{ macro.camposNuevos(form.nombre) }}
+                    {{ macro.camposNuevos(form.cant_compradores) }}
+                    {{ macro.camposNuevos(form.cant_boletas) }}
+                    
+                    <div class="mb-3">
+                        <label>Tarjeta Cineco</label><br>
+                        {% for subfield in form.tarjeta %}
+                            <div class="form-check form-check-inline">
+                                {{ subfield(class="form-check-input") }}
+                                <label class="form-check-label">{{ subfield.label.text }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <input type="submit" name="btn" value="Procesar" class="btn btn-cine">
+                        <a href="/cinepolis" class="btn-salir">Salir</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="cine-section">
+                    <h3>Salidas</h3>
+                    {% if mensaje %}
+                        <div class="alert alert-danger">{{ mensaje }}</div>
+                    {% endif %}
+                    
+                    {% if total_pagar > 0 %}
+                        <div class="ticket">
+                            <h4>Resumen de Compra</h4>
+                            <p><strong>Cliente:</strong> {{ form.nombre.data }}</p>
+                            <p><strong>Total a Pagar:</strong> ${{ "{:,.2f}".format(total_pagar) }}</p>
+                            <small>¡Gracias por su visita!</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
